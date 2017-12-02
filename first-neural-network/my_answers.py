@@ -57,26 +57,13 @@ class NeuralNetwork(object):
         # TODO: Hidden layer - Replace these values with your calculations.
         X2 = X[None, :].T
 
-        print("\nFORWARD PASS")
-        print("self.weights_input_to_hidden.shape = %s" % str(self.weights_input_to_hidden.shape))
-        print("X.shape = %s" % str(X.shape))
-        print("X2.shape = %s" % str(X2.shape))
-        
         hidden_inputs = np.dot(self.weights_input_to_hidden.T, X2)
         hidden_outputs = self.activation_function(hidden_inputs)
-
-        print("hidden_inputs.shape = %s (hidden_inputs = np.dot(self.weights_input_to_hidden.T, X2))" % str(hidden_inputs.shape))
-        print("hidden_outputs.shape = %s (hidden_outputs = self.activation_function(hidden_inputs))" % str(hidden_outputs.shape))
-
 
         # TODO: Output layer - Replace these values with your calculations.
         final_inputs = np.dot(self.weights_hidden_to_output.T, hidden_outputs)
         final_outputs = final_inputs
 
-        print("weights_hidden_to_output.shape = %s" % str(self.weights_hidden_to_output.shape))
-        print("final_inputs.shape = %s (final_inputs = np.dot(self.weights_hidden_to_output.T, hidden_outputs))" % str(final_inputs.shape))
-        print("final_outputs.shape = %s\n" % str(final_outputs.shape))
-        
         return final_outputs, hidden_outputs
 
     def backpropagation(self, final_outputs, hidden_outputs, X, y, delta_weights_i_h, delta_weights_h_o):
