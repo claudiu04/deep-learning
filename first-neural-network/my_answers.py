@@ -38,7 +38,7 @@ class NeuralNetwork(object):
             final_outputs, hidden_outputs = self.forward_pass_train(X)  # Implement the forward pass function below
             # Implement the backproagation function below
             dih, dho = self.backpropagation(final_outputs, hidden_outputs, X, y, 
-                                                                        delta_weights_i_h, delta_weights_h_o)
+                                                                        np.zeros(self.weights_input_to_hidden.shape), np.zeros(self.weights_hidden_to_output.shape))
             delta_weights_i_h += dih
             delta_weights_h_o += dho
         self.update_weights(delta_weights_i_h, delta_weights_h_o, n_records)
@@ -98,10 +98,10 @@ class NeuralNetwork(object):
         delta_weights_h_o += output_error_term * hidden_outputs
 
         # TODO: Update weights
-        delta_weights_i_h = self.lr * delta_weights_i_h
-        delta_weights_h_o = self.lr * delta_weights_h_o        
+        dwih = self.lr * delta_weights_i_h
+        dwho = self.lr * delta_weights_h_o        
        
-        return delta_weights_i_h, delta_weights_h_o
+        return dwih, dwho # delta_weights_i_h, delta_weights_h_o
 
     def update_weights(self, delta_weights_i_h, delta_weights_h_o, n_records):
         ''' Update weights on gradient descent step
@@ -160,6 +160,6 @@ class NeuralNetwork(object):
 # Set your hyperparameters here
 ##########################################################
 iterations = 100
-learning_rate = 1e-5
+learning_rate = 0.1
 hidden_nodes = 10
 output_nodes = 1
