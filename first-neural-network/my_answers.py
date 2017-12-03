@@ -74,12 +74,13 @@ class NeuralNetwork(object):
         #### Implement the backward pass here ####
         ### Backward pass ###
 
-        yy = y[:, None] if final_outputs.shape[0] > 1 else y
+        # Add dimension if y is 1-dimensional
+        yy = y[:, None] if len(y.shape) < len(final_outputs.shape) else y
         error = yy - final_outputs
 
-        output_error_term = error #* final_outputs * (1 - final_outputs)
+        output_error_term = error
 
-        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T) #, output_error_term)
+        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)
 
         hidden_error_term = hidden_error * hidden_outputs * (1 - hidden_outputs)
 
@@ -90,10 +91,10 @@ class NeuralNetwork(object):
         delta_weights_h_o += np.dot(hidden_outputs.T, output_error_term)
 
         # TODO: Update weights
-        dwih = self.lr * delta_weights_i_h
-        dwho = self.lr * delta_weights_h_o        
+        delta_weights_i_h = self.lr * delta_weights_i_h
+        delta_weights_h_o = self.lr * delta_weights_h_o        
        
-        return dwih, dwho # delta_weights_i_h, delta_weights_h_o
+        return delta_weights_i_h, delta_weights_h_o
 
     def update_weights(self, delta_weights_i_h, delta_weights_h_o, n_records):
         ''' Update weights on gradient descent step
