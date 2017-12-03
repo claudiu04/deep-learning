@@ -119,8 +119,7 @@ class NeuralNetwork(object):
             ---------
             features: 1D array of feature values
         '''
-        data = features.as_matrix()
-        num_records, num_features = data.shape
+        num_records, num_features = features.shape
 
         final_outputs, _ = self.forward_pass_train(features)
         return final_outputs
