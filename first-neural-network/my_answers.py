@@ -30,6 +30,14 @@ class NeuralNetwork(object):
             targets: 1D array of target values
         
         '''
+
+#        features = np.array(features, ndmin=2)
+#        targetss = np.array(targets, ndmin=2)
+        if len(features.shape) == 1:
+            features = features[:, None]
+        if len(targets.shape) == 1:
+            targets = targets[:, None]
+
         n_records = features.shape[0]
         delta_weights_i_h = np.zeros(self.weights_input_to_hidden.shape)
         delta_weights_h_o = np.zeros(self.weights_hidden_to_output.shape)
@@ -75,11 +83,20 @@ class NeuralNetwork(object):
         #### Implement the backward pass here ####
         ### Backward pass ###
 
+        X = np.array(X, ndmin=2)
+        y = np.array(y, ndmin=2)
+        hidden_outputs = np.array(hidden_outputs, ndmin=2)
+    
         # Add dimension if y is 1-dimensional
-        yy = y[:, None] if len(y.shape) == 1 or len(y.shape) < len(final_outputs.shape) else y
-        fo = final_outputs[:, None] if len(final_outputs.shape) == 1 else final_outputs 
-        X2 = X[None, :] if len(X.shape) == 1 else X
-        ho = hidden_outputs[None, :] if len(hidden_outputs.shape) == 1 else hidden_outputs
+#        yy = y[:, None] if len(y.shape) == 1 or len(y.shape) < len(final_outputs.shape) else y
+#        fo = final_outputs[:, None] if len(final_outputs.shape) == 1 else final_outputs 
+#        X2 = X[None, :] if len(X.shape) == 1 else X
+#        ho = hidden_outputs[None, :] if len(hidden_outputs.shape) == 1 else hidden_outputs
+
+        yy = y
+        fo = final_outputs
+        X2 = X
+        ho = hidden_outputs
  
         error = yy - fo
 
