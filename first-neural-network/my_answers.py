@@ -85,15 +85,49 @@ class NeuralNetwork(object):
 
         hidden_error_term = hidden_error * hidden_outputs * (1 - hidden_outputs)
 
-        # Weight step (input to hidden)
-        delta_weights_i_h += np.dot(X.T, hidden_error_term)
+        try:
+        
+            # Weight step (input to hidden)
+            delta_weights_i_h += np.dot(X.T, hidden_error_term)
 
-        # Weight step (hidden to output)
-        delta_weights_h_o += np.dot(hidden_outputs.T, output_error_term)
+            # Weight step (hidden to output)
+            delta_weights_h_o += np.dot(hidden_outputs.T, output_error_term)
+
+#        self.input_nodes = input_nodes
+#        self.hidden_nodes = hidden_nodes
+#        self.output_nodes = output_nodes
+#
+#        # Initialize weights
+#        self.weights_input_to_hidden = np.random.normal(0.0, self.input_nodes**-0.5,
+#                                       (self.input_nodes, self.hidden_nodes))
+#
+#        self.weights_hidden_to_output = np.random.normal(0.0, self.hidden_nodes**-0.5,
+#                                       (self.hidden_nodes, self.output_nodes))
+
+
+        except ValueError as ve:
+            s = ve.__str__() + "\n"
+            s = s + "y.shape = %s\n" % str(y.shape)
+            s  = s + "yy.shape = %s\n" % str(yy.shape)
+            s = s + "final_outputs.shape = %s\n" % str(final_outputs.shape)
+            s = s + "output_error_term.shape = %s\n" % str(output_error_term.shape)
+            s = s + "hidden_error.shape = %s\n" % str(hidden_error.shape)
+            s = s + "hidden_error_term.shape = %s\n" % str(hidden_error_term.shape)
+            s = s + "X.T.shape = %s\n" % str(X.T.shape)
+            s = s + "delta_weights_i_h += np.dot(X.T, hidden_error_term)\n"
+            s = s + "self.input_nodes = %s\n" % str(self.input_nodes)
+            s = s + "self.hidden_nodes = %s\n" % str(self.hidden_nodes)
+            s = s + "self.weights_input_to_hidden.shape = %s\n" % str(self.weights_input_to_hidden.shape)
+            s = s + "self.weights_hidden_to_output.shape = %s\n" % str(self.weights_hidden_to_output.shape)
+            s = s + "delta_weights_i_h.shape = %s\n" % str(delta_weights_i_h.shape)
+            s = s + "delta_weights_h_i.shape = %s" % str(delta_weights_h_o.shape)
+
+            raise ValueError(s)
+
 
         # TODO: Update weights
-        delta_weights_i_h = self.lr * delta_weights_i_h
-        delta_weights_h_o = self.lr * delta_weights_h_o        
+#        delta_weights_i_h = delta_weights_i_h
+#        delta_weights_h_o = delta_weights_h_o        
        
         return delta_weights_i_h, delta_weights_h_o
 
@@ -107,8 +141,8 @@ class NeuralNetwork(object):
             n_records: number of records
 
         '''
-        self.weights_hidden_to_output += delta_weights_h_o / n_records
-        self.weights_input_to_hidden += delta_weights_i_h / n_records
+        self.weights_hidden_to_output += self.lr * delta_weights_h_o / n_records
+        self.weights_input_to_hidden += self.lr * delta_weights_i_h / n_records
 
     def run(self, features):
         ''' Run a forward pass through the network with input features 
@@ -125,7 +159,7 @@ class NeuralNetwork(object):
 #########################################################
 # Set your hyperparameters here
 ##########################################################
-iterations = 15000
-learning_rate = 0.1
+iterations = 6000
+learning_rate = 0.625
 hidden_nodes = 10
 output_nodes = 1
