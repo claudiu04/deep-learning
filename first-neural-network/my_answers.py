@@ -76,8 +76,12 @@ class NeuralNetwork(object):
         ### Backward pass ###
 
         # Add dimension if y is 1-dimensional
-        yy = y[:, None] if len(y.shape) < len(final_outputs.shape) else y
-        error = yy - final_outputs
+        yy = y[:, None] if len(y.shape) == 1 or len(y.shape) < len(final_outputs.shape) else y
+        fo = final_outputs[:, None] if len(final_outputs.shape) == 1 else final_outputs 
+        X2 = X[None, :] if len(X.shape) == 1 else X
+        ho = hidden_outputs[None, :] if len(hidden_outputs.shape) == 1 else hidden_outputs
+ 
+        error = yy - fo
 
         output_error_term = error
 
@@ -88,10 +92,10 @@ class NeuralNetwork(object):
         try:
         
             # Weight step (input to hidden)
-            delta_weights_i_h += np.dot(X.T, hidden_error_term)
+            delta_weights_i_h += np.dot(X2.T, hidden_error_term)
 
             # Weight step (hidden to output)
-            delta_weights_h_o += np.dot(hidden_outputs.T, output_error_term)
+            delta_weights_h_o += np.dot(ho.T, output_error_term)
 
 #        self.input_nodes = input_nodes
 #        self.hidden_nodes = hidden_nodes
@@ -110,6 +114,7 @@ class NeuralNetwork(object):
             s = s + "y.shape = %s\n" % str(y.shape)
             s  = s + "yy.shape = %s\n" % str(yy.shape)
             s = s + "final_outputs.shape = %s\n" % str(final_outputs.shape)
+            s = s + "fo.shape = %s\n" % str(fo.shape)
             s = s + "output_error_term.shape = %s\n" % str(output_error_term.shape)
             s = s + "hidden_error.shape = %s\n" % str(hidden_error.shape)
             s = s + "hidden_error_term.shape = %s\n" % str(hidden_error_term.shape)
